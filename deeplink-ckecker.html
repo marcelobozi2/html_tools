@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Link Checker | Wine</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;700&display=swap" rel="stylesheet">
+    <style>
+        body{
+            font-family: 'Lato', sans-serif;
+            font-weight: 300;
+        }
+        /*div{border:solid 1px #000}*/
+        .container{
+            width:90%;
+            padding:15px;
+            box-sizing: border-box;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .row{
+            padding:15px;
+            box-sizing: border-box;
+            width:100%;
+        }
+        .itens-check{
+            padding:10px 20px;
+            box-sizing: border-box;
+            max-width:450px;
+            border:solid 1px #777;
+            margin-bottom:5px;
+            background-color: #e9e6e6;
+            color:#000;
+            border-radius: 1rem;
+            margin-left:auto;
+            margin-right: auto;
+            font-size:.9em;
+            font-weight: 700;
+        }
+        .alert-danger{
+            background-color: rgb(240, 75, 75) !important;
+        }
+        .alert-success{
+            background-color: rgb(15, 235, 143) !important;
+        }
+        .center{
+            text-align:center
+        }
+        .form-control{
+            padding:20px;
+            border: solid 1px #777;
+            border-radius:2rem;
+            font-size:18px;
+            color:rgb(78, 73, 73);
+            width:90%
+        }
+        .btn-success{
+            padding:20px 80px;
+            font-size:18px;
+            color:#fff;
+            border-radius:2rem;
+            background-color: rgb(63, 94, 10);
+            border:0px;
+            margin-right:12px;
+            cursor: pointer
+        }
+        .btn-success:hover {
+            background-color: rgb(40, 59, 7);
+        }
+        .btn-warning{
+            padding:20px 80px;
+            font-size:18px;
+            color:#000;
+            border-radius:2rem;
+            background-color: rgb(247, 197, 33);
+            border:0px;
+            cursor: pointer
+        }
+        .btn-warning:hover {
+            background-color: rgb(224, 163, 31);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row center"><h1>Deep Link Checker | Wine</h1></div>
+    <div class="row center">
+        <input type="text" class="form-control" id="link" placeholder="Cole o link aqui">
+    </div>
+    <div class="row center"><button class="btn-success" onclick="validaLink()">Checar</button><button class="btn-warning" onclick="limpar()">Limpar</button></div>
+    <div class="row" style="margin-top:40px">
+        <div id="primeiroitem" class="itens-check">Link básico do App</div>
+        <div id="segundoitem" class="itens-check">ID do HID</div>
+        <div id="segmeioitem" class="itens-check">ID do PID</div>
+        <div id="terceiroitem" class="itens-check">Parâmetro de Campanha</div>
+        <div id="quartoitem" class="itens-check">Parâmetro de Origem</div>
+        <div id="quintoitem" class="itens-check">Ausência de espaços vazios</div>
+        <div id="sextoitem" class="itens-check">Caracteres todos minúsculos</div>
+    </div>
+</div>
+    <script>       
+
+        function validaLink(){
+            let entrada = document.getElementById('link');
+            let primeiroitem = document.getElementById('primeiroitem');
+            let segundoitem = document.getElementById('segundoitem');
+            let segmeioitem = document.getElementById('segmeioitem');
+            let terceiroitem = document.getElementById('terceiroitem');
+            let quartoitem = document.getElementById('quartoitem');
+            let quintoitem = document.getElementById('quintoitem');
+            let sextoitem = document.getElementById('sextoitem');
+
+            let link = entrada.value;
+                if(link === ''){
+                    alert('Nenhum link inserido');
+                    entrada.focus();
+                }else{
+                    //quebra o link em 03 partes
+                    let partes = link.split('&');
+                    //verifica se o protocolo está presente
+                    link.includes('appwine://appwine') === true ? primeiroitem.classList.add('alert-success') : primeiroitem.classList.add('alert-danger');
+                    //verifica se há espaços vazios
+                    link.includes(' ') === false ? quintoitem.classList.add('alert-success') : quintoitem.classList.add('alert-danger');
+                    // verifica se há caracteres maiúsculos nos parâmetros
+                    (partes[2].search(/[A-Z]/) <= 0) && (partes[3].search(/[A-Z]/) <= 0)  ? sextoitem.classList.add('alert-success') : sextoitem.classList.add('alert-danger');
+                    // verifica presença do HID
+                    link.includes('?hid=') === true ? segundoitem.classList.add('alert-success') : segundoitem.classList.add('alert-danger');
+                    // verifica presença do PID
+                    link.includes('&pid=') === true ? segmeioitem.classList.add('alert-success') : segmeioitem.classList.add('alert-danger');
+                    // parâmetro de campanha
+                    link.includes('&campaign_name=') === true ? terceiroitem.classList.add('alert-success') : terceiroitem.classList.add('alert-danger');
+                    // parâmetro de origem
+                    link.includes('&media_source=') === true ? quartoitem.classList.add('alert-success') : quartoitem.classList.add('alert-danger');
+                }
+        }
+        function limpar(){
+            document.location.reload(true);
+        }
+    </script>
+</body>
+</html>
